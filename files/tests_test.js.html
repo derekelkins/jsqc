@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>tests&#x2F;test.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0pr2&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0pr2&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/Gen[A].html">Gen[A]</a></li>
+            
+                <li><a href="..&#x2F;classes/RandGen.html">RandGen</a></li>
+            
+                <li><a href="..&#x2F;classes/Result.html">Result</a></li>
+            
+                <li><a href="..&#x2F;classes/Stream[A].html">Stream[A]</a></li>
+            
+                <li><a href="..&#x2F;classes/TestRunner.html">TestRunner</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/jsqc.html">jsqc</a></li>
+            
+                <li><a href="..&#x2F;modules/test.html">test</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: tests&#x2F;test.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x27;use strict&#x27;;
+&#x2F;**
+Unit tests.
+
+Copyright (c) 2013, Derek Elkins.  See LICENSE.
+@module test
+*&#x2F;
+(function(factory) {
+    if(typeof define === &#x27;function&#x27; &amp;&amp; define.amd) {
+        define([&#x27;jsqc&#x27;], factory);
+    } else if(typeof require === &#x27;function&#x27; &amp;&amp; typeof exports === &#x27;object&#x27; &amp;&amp; typeof module === &#x27;object&#x27;) { 
+        factory(require(&#x27;jsqc&#x27;));
+    } else {
+        factory(window.jsqc);
+    }
+})(function(QC) {
+
+var TR = QC.TestRunner.Default;
+var ShortTR = new QC.TestRunner({ maxSuccesses: 10, maxDiscards: 10 });
+var Gen = QC.Gen;
+var Stream = QC.Stream;
+var equiv = QUnit.equiv;
+
+function qc(gens, body) {
+    TR.testRun(Gen.forAllNoShrink(gens, body), ok);
+}
+
+module(&#x27;RandGen&#x27;);
+
+test(&#x27;random calls differ&#x27;, function() {
+    var rng = new QC.RandGen(new (Uint32Array || Array)(10));
+    notEqual(rng.randomUint(), rng.randomUint());
+});
+
+module(&#x27;Stream&#x27;);
+
+test(&#x27;toArray o fromArray&#x27;, function() {
+    qc([Gen.genInt.arrayOf().resized(5)], function(xs) {
+        return equiv(Stream.fromArray(xs).toArray(), xs);
+    });
+});
+
+test(&#x27;concat two&#x27;, function() {
+    qc([Gen.genInt.arrayOf().resized(5), Gen.genInt.arrayOf().resized(5)], function(x, y) {
+        var ss = Stream.fromArray([Stream.fromArray(x), Stream.fromArray(y)]);
+        return equiv(ss.flatten().toArray(), x.concat(y));
+    });
+});
+
+test(&#x27;concat unit&#x27;, function() {
+    qc([Gen.genInt.arrayOf().resized(5)], function(x) {
+        var  leftUnit = Stream.fromArray([Stream.Empty, Stream.fromArray(x)]).flatten();
+        var rightUnit = Stream.fromArray([Stream.fromArray(x), Stream.Empty]).flatten();
+        return equiv(leftUnit.toArray(), x) &amp;&amp; equiv(rightUnit.toArray(), x);
+    });
+});
+
+module(&#x27;Gen&#x27;);
+
+test(&#x27;typeof genBool is boolean&#x27;, function() {
+    equal(typeof Gen.genBool(QC.StdRandGen, 100)[0], &#x27;boolean&#x27;);
+});
+
+test(&#x27;shrinkArray&#x27;, function() {
+    &#x2F;&#x2F; Note that the order of the results doesn&#x27;t particularly matter, so this
+    &#x2F;&#x2F; test over-specifies the result.
+    deepEqual(Gen.shrinkArray(Gen.shrinkBool)([true, true]).toArray(),
+        [[false, true],[false,false],[true,false]]);
+});
+
+test(&#x27;unit tests are a special case of QC tests: shrinkArray part deux&#x27;, function() {
+    qc([], function() {
+        return equiv(Gen.shrinkArray(Gen.shrinkBool)([true, true]).toArray()
+                    ,[[false, true],[false,false],[true,false]]);
+    });
+});
+
+test(&#x27;chooseInt(lo,hi) between lo and hi&#x27;, function() {
+    qc([Gen.genInt, Gen.genInt], function(a, b) {
+        var x = 0;
+        if(a &lt; b) {
+            x = Gen.chooseInt(a, b)(QC.StdRandGen, 100);
+            return a &lt;= x &amp;&amp; x &lt;= b;
+        } else {
+            x = Gen.chooseInt(b, a)(QC.StdRandGen, 100);
+            return b &lt;= x &amp;&amp; x &lt;= a;
+        }
+    });
+});
+
+module(&#x27;TestRunner&#x27;);
+
+test(&#x27;passing test&#x27;, function() {
+    TR.testRun(Gen.forAllNoShrink([Gen.genBool, Gen.genBool], function(x, y) {
+        return x === x;
+    }), function(b, s) { ok(b &amp;&amp; s.indexOf(&#x27;Passed&#x27;) === 0, s) });
+});
+
+test(&#x27;proved test&#x27;, function() {
+    TR.testRun(Gen.forAllNoShrink([], function() {
+        return true;
+    }), function(b, s) { ok(b &amp;&amp; s.indexOf(&#x27;Proved&#x27;) === 0, s) });
+});
+
+test(&#x27;failing test&#x27;, function() {
+    TR.testRun(Gen.forAllNoShrink([Gen.genBool, Gen.genBool], function(x, y) {
+        return x === y;
+    }), function(b, s) { ok(!b &amp;&amp; s.indexOf(&#x27;Failed&#x27;) === 0, s); });
+});
+
+test(&#x27;exception test&#x27;, function() {
+    TR.testRun(Gen.forAllNoShrink([Gen.genBool, Gen.genBool], function(x, y) {
+        throw &quot;foo&quot;;
+    }), function(b, s) { ok(!b &amp;&amp; s.indexOf(&#x27;Exception&#x27;) === 0, s); });
+});
+
+test(&#x27;give up test&#x27;, function() {
+    TR.testRun(Gen.forAllNoShrink([Gen.genBool.suchThat(function(b) { return false; }), Gen.genBool], function(x, y) {
+        return x === x;
+    }), function(b, s) { ok(!b &amp;&amp; s.indexOf(&#x27;Undecided&#x27;) === 0, s); });
+});
+
+asyncTest(&#x27;async test&#x27;, function() {
+    ShortTR.testRunAsync(function(c) { 
+        return Gen.forAllNoShrinkAsync([Gen.genBool, Gen.genBool], function(k) { return function(x,y) {
+            window.setTimeout(function() { k(x === x); }, 0);
+        }; }, c)
+    }, function(b, s) { ok(b, s); start(); });
+});
+
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

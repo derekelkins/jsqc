@@ -1,0 +1,1923 @@
+{
+    "project": {},
+    "files": {
+        "tests/qunit-1.11.0.js": {
+            "name": "tests/qunit-1.11.0.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "tests/test.js": {
+            "name": "tests/test.js",
+            "modules": {
+                "test": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "jsqc.js": {
+            "name": "jsqc.js",
+            "modules": {
+                "jsqc": 1
+            },
+            "classes": {
+                "RandGen": 1,
+                "Stream[A]": 1,
+                "Gen[A]": 1,
+                "Result": 1,
+                "TestRunner": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "test": {
+            "name": "test",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "tests/test.js",
+            "line": 2,
+            "description": "Unit tests.\n\nCopyright (c) 2013, Derek Elkins.  See LICENSE."
+        },
+        "jsqc": {
+            "name": "jsqc",
+            "submodules": {},
+            "classes": {
+                "RandGen": 1,
+                "Stream[A]": 1,
+                "Gen[A]": 1,
+                "Result": 1,
+                "TestRunner": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "main",
+            "file": "jsqc.js",
+            "line": 1289,
+            "description": "Javascript QuickCheck v. 0.0.1 (alpha)\nCopyright (c) 2013, Derek Elkins.  See LICENSE.\n\nTODO: Implement something like ScalaCheck's Command framework.\nTODO: Implement shrinking.\nTODO: Implement function generators.\nTODO: Implement exhaustive checking for small domains.\nTODO: Make elements, nonEmptyArrayOf, etc. select uniformly. Doing rand()%n is not uniform unless n is a power of two.",
+            "itemtype": "main"
+        }
+    },
+    "classes": {
+        "RandGen": {
+            "name": "RandGen",
+            "shortname": "RandGen",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "jsqc",
+            "namespace": "",
+            "file": "jsqc.js",
+            "line": 40,
+            "description": "A splittable random number generator.\n\nThis is ChaCha/8.",
+            "is_constructor": 1
+        },
+        "Stream[A]": {
+            "name": "Stream[A]",
+            "shortname": "Stream[A]",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "jsqc",
+            "namespace": "",
+            "file": "jsqc.js",
+            "line": 224,
+            "description": "Coalgebraic streams.",
+            "params": [
+                {
+                    "name": "seed",
+                    "description": "An initial state",
+                    "type": "S"
+                },
+                {
+                    "name": "step",
+                    "description": "Take in a state a produce a result and a new state, or no result signaling the end.",
+                    "type": "S &rarr; [] | [A, S]"
+                }
+            ],
+            "is_constructor": 1
+        },
+        "Gen[A]": {
+            "name": "Gen[A]",
+            "shortname": "Gen[A]",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "jsqc",
+            "namespace": "",
+            "file": "jsqc.js",
+            "line": 382,
+            "description": "Produces a Gen[A] which is a function from (RNG, Int, Bool) &rarr; Maybe[A]\nwhere Maybe[A] = [] | [A].\n\nDon't call with new.",
+            "params": [
+                {
+                    "name": "generator",
+                    "description": "The actual value generator.",
+                    "type": "(RNG, Int, Bool) &rarr; Maybe[A]"
+                },
+                {
+                    "name": "label",
+                    "description": "A label.",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "''"
+                },
+                {
+                    "name": "predicate",
+                    "description": "A filtering predicate.",
+                    "type": "[A] &rarr; Bool",
+                    "optional": true
+                },
+                {
+                    "name": "shrinker",
+                    "description": "A value shrinker.",
+                    "type": "A &rarr; Stream[A]",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[A]"
+            }
+        },
+        "Result": {
+            "name": "Result",
+            "shortname": "Result",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "jsqc",
+            "namespace": "",
+            "file": "jsqc.js",
+            "line": 1151,
+            "description": "Result is either Passed, Proved, Failed, Exception, Undecided.  In the case of Exception, which\nexception is also included.",
+            "access": "private",
+            "tagname": "",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "type",
+                    "description": "The type of the result.  Used for display.",
+                    "type": "String"
+                },
+                {
+                    "name": "success",
+                    "description": "Whether this Result indicates success.",
+                    "type": "Bool"
+                },
+                {
+                    "name": "exception",
+                    "description": "An exception for the Exception type.",
+                    "type": "Exception"
+                }
+            ]
+        },
+        "TestRunner": {
+            "name": "TestRunner",
+            "shortname": "TestRunner",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "jsqc",
+            "namespace": "",
+            "file": "jsqc.js",
+            "line": 1289,
+            "is_constructor": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 1,
+            "description": "QUnit v1.11.0 - A JavaScript Unit Testing Framework\n\nhttp://qunitjs.com\n\nCopyright 2012 jQuery Foundation and other contributors\nReleased under the MIT license.\nhttp://jquery.org/license",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 36,
+            "description": "Provides a normalized error string, correcting an issue\nwith IE 7 (and prior) where Error.prototype.toString is\nnot properly implemented\n\nBased on http://es5.github.com/#x15.11.4.4",
+            "params": [
+                {
+                    "name": "error",
+                    "description": "",
+                    "type": "String|Error"
+                }
+            ],
+            "return": {
+                "description": "error message",
+                "type": "String"
+            },
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 65,
+            "description": "Makes a clone of an object using only Array or Object as base,\nand copies over the own enumerable properties.",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "New object with only the own properties (recursively).",
+                "type": "Object"
+            },
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 497,
+            "description": "Asserts rough true-ish result.",
+            "name": "",
+            "itemtype": "method",
+            "example": [
+                " ok( \"asdfasdf\".length > 5, \"There must be at least 5 chars\" );"
+            ],
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 534,
+            "description": "Assert that the first two arguments are equal, with an optional message.\nPrints out both actual and expected values.",
+            "name": "",
+            "itemtype": "method",
+            "example": [
+                " equal( format( \"Received {0} bytes.\", 2), \"Received 2 bytes.\", \"format() replaces {0} with next argument\" );"
+            ],
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 546,
+            "name": "",
+            "itemtype": "method",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 555,
+            "name": "",
+            "itemtype": "method",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 565,
+            "name": "",
+            "itemtype": "method",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 575,
+            "name": "",
+            "itemtype": "method",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 583,
+            "name": "",
+            "itemtype": "method",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 591,
+            "name": "",
+            "itemtype": "method",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 599,
+            "name": "",
+            "itemtype": "method",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 650,
+            "deprecate": "since 1.8.0\nKept assertion helpers in root for backwards compatibility.",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 656,
+            "deprecated": true,
+            "deprecationMessage": "since 1.9.0\nKept root \"raises()\" for backwards compatibility.\n(Note that we don't introduce assert.raises).",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 663,
+            "deprecated": true,
+            "deprecationMessage": "since 1.0.0, replaced with error pushes since 1.3.0\nKept to avoid TypeErrors for undefined methods.",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 683,
+            "description": "Config object: Maintain internal state\nLater exposed as QUnit.config\n`config` initialized at top of scope",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 1004,
+            "deprecated": true,
+            "deprecationMessage": ": Created for backwards compatibility with test runner that set the hook function\ninto QUnit.{hook}, instead of invoking it and passing the hook function.\nQUnit.constructor is set to the empty F() above so that we can add to it's prototype here.\nDoing this allows us to tell if the following methods have been overwritten on the actual\nQUnit object.",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 1290,
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 1378,
+            "description": "Escape text for attribute or text content.",
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 1495,
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "",
+                    "type": "HTMLElement"
+                },
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "fn",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 1510,
+            "params": [
+                {
+                    "name": "elems",
+                    "description": "",
+                    "type": "Array|NodeList"
+                },
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "fn",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "RandGen"
+        },
+        {
+            "file": "tests/qunit-1.11.0.js",
+            "line": 1752,
+            "description": "jsDump Copyright (c) 2008 Ariel Flesler - aflesler(at)gmail(dot)com |\nhttp://flesler.blogspot.com Licensed under BSD\n(http://www.opensource.org/licenses/bsd-license.php) Date: 5/15/2008",
+            "projectdescription": "Advanced and extensible data dumping for Javascript.",
+            "version": "1.0.0",
+            "author": "Ariel Flesler",
+            "link": "{http://flesler.blogspot.com/2008/05/jsdump-pretty-dump-of-any-javascript.html}",
+            "class": "RandGen"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 156,
+            "description": "Produces a random Uint32 between [0, 2^32-1] and moves to the next state.",
+            "itemtype": "method",
+            "name": "randomUint",
+            "return": {
+                "description": "[0, 2^32-1]",
+                "type": "Uint32"
+            },
+            "class": "RandGen",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 170,
+            "description": "Produces a random Int32 between [-2^31, 2^31-1] and moves to the next state.",
+            "itemtype": "method",
+            "name": "randomInt",
+            "return": {
+                "description": "[-2^31, 2^31-1]",
+                "type": "Int32"
+            },
+            "class": "RandGen",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 184,
+            "description": "Produces a random Float between [0, 1] and moves to the next state.",
+            "itemtype": "method",
+            "name": "randomClosed",
+            "return": {
+                "description": "[0, 1]",
+                "type": "Float"
+            },
+            "class": "RandGen",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 198,
+            "description": "Produces a random Float between [0, 1) and moves to the next state.",
+            "itemtype": "method",
+            "name": "random",
+            "return": {
+                "description": "[0, 1)",
+                "type": "Float"
+            },
+            "class": "RandGen",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 212,
+            "itemtype": "method",
+            "name": "split",
+            "params": [
+                {
+                    "name": "tweak",
+                    "description": "A tweak.",
+                    "type": "Uint"
+                }
+            ],
+            "return": {
+                "description": "A derived but independent random number generator.",
+                "type": "RandGen"
+            },
+            "class": "RandGen",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 238,
+            "description": "True if the stream is empty.",
+            "itemtype": "method",
+            "name": "isEmpty",
+            "return": {
+                "description": "Bool"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 251,
+            "description": "First element in a non-empty stream.",
+            "itemtype": "method",
+            "name": "head",
+            "return": {
+                "description": "A"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 265,
+            "description": "Remainder of a non-empty stream.",
+            "itemtype": "method",
+            "name": "tail",
+            "chainable": 1,
+            "return": {
+                "description": "",
+                "type": "Stream[A]"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 291,
+            "description": "Make an array from a (finite) stream.",
+            "itemtype": "method",
+            "name": "toArray",
+            "return": {
+                "description": "An array of the elements of the stream.",
+                "type": "[A]"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 307,
+            "description": "Flatten a stream of streams into a stream.",
+            "itemtype": "method",
+            "name": "flatten",
+            "return": {
+                "description": "",
+                "type": "Stream[A]"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 326,
+            "description": "The empty stream.",
+            "itemtype": "property",
+            "name": "Empty",
+            "static": 1,
+            "type": "Stream[A]",
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 336,
+            "description": "Make a stream from an array.",
+            "itemtype": "method",
+            "name": "fromArray",
+            "static": 1,
+            "params": [
+                {
+                    "name": "xs",
+                    "description": "An array of elements.",
+                    "type": "[A]"
+                }
+            ],
+            "return": {
+                "description": "A stream of the elements.",
+                "type": "Stream[A]"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 351,
+            "description": "Add an element to the beginning of the stream.",
+            "itemtype": "method",
+            "name": "cons",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "An element.",
+                    "type": "A"
+                },
+                {
+                    "name": "xs",
+                    "description": "The rest of the stream.",
+                    "type": "Stream[A]"
+                }
+            ],
+            "return": {
+                "description": "A stream starting with x and preceding with xs.",
+                "type": "Stream[A]"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 368,
+            "description": "Make a singleton stream.",
+            "itemtype": "method",
+            "name": "singleton",
+            "static": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "A value.",
+                    "type": "A"
+                }
+            ],
+            "return": {
+                "description": "A one element stream.",
+                "type": "Stream[A]"
+            },
+            "class": "Stream[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 416,
+            "description": "Labels a generator.",
+            "itemtype": "method",
+            "name": "withLabel",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "label",
+                    "description": "A label.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 429,
+            "description": "Overrides the shrinker on this generator.",
+            "itemtype": "method",
+            "name": "withShrinker",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "shrinker",
+                    "description": "A shrinker.",
+                    "type": "A &rarr; Stream[A]"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 446,
+            "description": "Return a new generator with a specified size parameter.",
+            "itemtype": "method",
+            "name": "resized",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "size",
+                    "description": "A new size for the generator.",
+                    "type": "Int"
+                }
+            ],
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 458,
+            "description": "Returns a modified generator given a tweak.  Using the same tweak on the same\nstarting generator in the same state will produce the same result.  Using the same tweak on different\ngenerators or the same generator in different states will produce independent generators.",
+            "itemtype": "method",
+            "name": "variant",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "tweak",
+                    "description": "There are no restrictions on this to achieve an independent generator.",
+                    "type": "Uint32"
+                }
+            ],
+            "return": {
+                "description": "A new independent random number generator.",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 473,
+            "description": "Turn a Gen[A] into a Gen[B] given a function A &rarr; B.",
+            "itemtype": "method",
+            "name": "map",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "f",
+                    "description": "",
+                    "type": "A &rarr; B"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[B]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 491,
+            "description": "Turn a Gen[A] into a Gen[B] given a function A &rarr; Gen[B].",
+            "itemtype": "method",
+            "name": "concatMap",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "f",
+                    "description": "",
+                    "type": "A &rarr; Gen[B]"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[B]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 507,
+            "description": "Return a new generator that filters it's output with the given predicate.",
+            "itemtype": "method",
+            "name": "suchThat",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "p",
+                    "description": "",
+                    "type": "A &rarr; Bool"
+                }
+            ],
+            "return": {
+                "description": "Filtered version of the input.",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 519,
+            "description": "Return a generator that returns an array of a random length greater than 0.",
+            "itemtype": "method",
+            "name": "nonEmptyArrayOf",
+            "chainable": 1,
+            "return": {
+                "description": "A generator of randomly sized, non-empty arrays.",
+                "type": "Gen[[A]]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 540,
+            "description": "Return a generator that returns an array of a random length.",
+            "itemtype": "method",
+            "name": "arrayOf",
+            "chainable": 1,
+            "return": {
+                "description": "A generator of randomly sized arrays.",
+                "type": "Gen[[A]]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 561,
+            "description": "Return a generator that returns an array of a given length.",
+            "itemtype": "method",
+            "name": "arrayOfSize",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "n",
+                    "description": "Size of the array.",
+                    "type": "Int"
+                }
+            ],
+            "return": {
+                "description": "A generator of size n arrays.",
+                "type": "Gen[[A]]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 582,
+            "description": "Combine two generators into one, prefering one depending on weight.  By default, there is a 50/50 split.",
+            "itemtype": "method",
+            "name": "mixWith",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "gen",
+                    "description": "Another generator from which to choose values.",
+                    "type": "Gen[A]"
+                },
+                {
+                    "name": "weight",
+                    "description": "How much this generator should be preferred over the passed in one.",
+                    "type": "Float",
+                    "optional": true,
+                    "optdefault": "0.5"
+                }
+            ],
+            "return": {
+                "description": "A generator that produces a mixture of values.",
+                "type": "Gen[A]"
+            },
+            "example": [
+                "\n    Gen.genUint.mixWith(Gen.genNull, 0.95); // Generate null 5% of the time."
+            ],
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 605,
+            "description": "Convert a proposition, a Gen[Bool], into a property.",
+            "itemtype": "method",
+            "name": "asProperty",
+            "chainable": 1,
+            "return": {
+                "description": "A property.",
+                "type": "Gen[Result]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 632,
+            "itemtype": "method",
+            "name": "combine",
+            "params": [
+                {
+                    "name": "that",
+                    "description": "Another generator.",
+                    "type": "Gen[B]"
+                },
+                {
+                    "name": "f",
+                    "description": "A combining function.",
+                    "type": "(A, B) &rarr; C"
+                }
+            ],
+            "return": {
+                "description": "f(this, that) conceptually.",
+                "type": "Gen[C]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 642,
+            "itemtype": "method",
+            "name": "or",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 649,
+            "itemtype": "method",
+            "name": "and",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 656,
+            "itemtype": "method",
+            "name": "iff",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 663,
+            "itemtype": "method",
+            "name": "implies",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 670,
+            "itemtype": "method",
+            "name": "not",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 676,
+            "itemtype": "method",
+            "name": "equals",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 683,
+            "itemtype": "method",
+            "name": "doesNotEqual",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 690,
+            "description": "Produces a proposition that a generator will produce an exception.",
+            "itemtype": "method",
+            "name": "throwsException",
+            "chainable": 1,
+            "return": {
+                "description": "Return true if this throws an exception, false otherwise.",
+                "type": "Gen[Bool]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 709,
+            "itemtype": "method",
+            "name": "withArgs",
+            "access": "private",
+            "tagname": "",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "args",
+                    "description": "",
+                    "type": "[any]"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[Result]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 721,
+            "itemtype": "method",
+            "name": "all",
+            "static": 1,
+            "params": [
+                {
+                    "name": "gens",
+                    "description": "",
+                    "type": "Gen[Bool]",
+                    "optional": true,
+                    "multiple": true
+                }
+            ],
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 736,
+            "itemtype": "method",
+            "name": "any",
+            "static": 1,
+            "params": [
+                {
+                    "name": "gens",
+                    "description": "",
+                    "type": "Gen[Bool]",
+                    "optional": true,
+                    "multiple": true
+                }
+            ],
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 750,
+            "description": "Return a generator of arrays from an array of generators.",
+            "itemtype": "method",
+            "name": "sequence",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "gens",
+                    "description": "An array of generators.",
+                    "type": "[Gen[A]]"
+                }
+            ],
+            "return": {
+                "description": "A generator of arrays.",
+                "type": "Gen[[A]]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 771,
+            "itemtype": "method",
+            "name": "forAllNoShrink",
+            "static": 1,
+            "params": [
+                {
+                    "name": "gens",
+                    "description": "Domain of quantification.",
+                    "type": "[Gen[any]]"
+                },
+                {
+                    "name": "p",
+                    "description": "A predicate.",
+                    "type": "(...any) &rarr; Bool"
+                }
+            ],
+            "result": "{Gen[Result]}",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 787,
+            "itemtype": "method",
+            "name": "forAllNoShrinkAsync",
+            "static": 1,
+            "params": [
+                {
+                    "name": "gens",
+                    "description": "Domain of quantification.",
+                    "type": "[Gen[any]]"
+                },
+                {
+                    "name": "p",
+                    "description": "A predicate.",
+                    "type": "(Bool &rarr; void) &rarr; (...any) &rarr; void"
+                },
+                {
+                    "name": "k",
+                    "description": "Callback.",
+                    "type": "Result &rarr; void"
+                }
+            ],
+            "result": "{Gen[void]}",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 836,
+            "description": "Return a generator that chooses a value from the specified list of generators with a specified frequency.",
+            "itemtype": "method",
+            "name": "frequency",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "gens",
+                    "description": "An array of two element arrays.",
+                    "type": "[[Int, Gen[A]]]"
+                }
+            ],
+            "return": {
+                "description": "A generator that randomly chooses between the provided generators.",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 859,
+            "description": "Return one of a specified list of values.",
+            "itemtype": "method",
+            "name": "elements",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "xs",
+                    "description": "A non-empty array of elements.",
+                    "type": "[A]"
+                }
+            ],
+            "return": {
+                "description": "A generator that randomly returns one of the given elements.",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 876,
+            "description": "Return a generator that chooses a value from one of the specified list of generators randomly.",
+            "itemtype": "method",
+            "name": "oneOf",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "gens",
+                    "description": "A non-empty array of generators.",
+                    "type": "[Gen[A]]"
+                }
+            ],
+            "return": {
+                "description": "A generator that returns a random element of a randomly chosen input generator.",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 889,
+            "description": "Return a generator that always returns the same value.",
+            "itemtype": "method",
+            "name": "value",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "a",
+                    "description": "",
+                    "type": "A"
+                }
+            ],
+            "return": {
+                "description": "A constant generator.",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 904,
+            "description": "Construct a generator that depends on the size parameter.",
+            "itemtype": "method",
+            "name": "sized",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "g",
+                    "description": "",
+                    "type": "Int &rarr; Gen[A]"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 917,
+            "description": "Generate a random Int in the specified range inclusive.",
+            "itemtype": "method",
+            "name": "chooseInt",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "lo",
+                    "description": "",
+                    "type": "Int"
+                },
+                {
+                    "name": "hi",
+                    "description": "",
+                    "type": "Int"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[Int]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 933,
+            "description": "Generate a random Float in the specified range not including the end point.",
+            "itemtype": "method",
+            "name": "chooseFloat",
+            "static": 1,
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "lo",
+                    "description": "",
+                    "type": "Float"
+                },
+                {
+                    "name": "hi",
+                    "description": "",
+                    "type": "Float"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Gen[Float]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 949,
+            "description": "The trivial shrinker.",
+            "itemtype": "method",
+            "name": "shrinkNothing",
+            "static": 1,
+            "params": [
+                {
+                    "name": "any",
+                    "description": "",
+                    "type": "A"
+                }
+            ],
+            "return": {
+                "description": "Always the empty stream.",
+                "type": "Stream[A]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 961,
+            "description": "Bool shrinker.",
+            "itemtype": "method",
+            "name": "shrinkBool",
+            "static": 1,
+            "params": [
+                {
+                    "name": "A",
+                    "description": "boolean.",
+                    "type": "Bool"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Stream[Bool]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 973,
+            "description": "Int shrinker:",
+            "itemtype": "method",
+            "name": "shrinkInt",
+            "static": 1,
+            "params": [
+                {
+                    "name": "A",
+                    "description": "number.",
+                    "type": "Int"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Stream[Int]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 990,
+            "description": "Float shrinker.",
+            "itemtype": "method",
+            "name": "shrinkFloat",
+            "static": 1,
+            "params": [
+                {
+                    "name": "A",
+                    "description": "number.",
+                    "type": "Float"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Stream[Float]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1005,
+            "description": "Array shrinker.",
+            "itemtype": "method",
+            "name": "shrinkArray",
+            "static": 1,
+            "params": [
+                {
+                    "name": "shrinker",
+                    "description": "A shrinker for the elements.",
+                    "type": "A &rarr; Stream[A]"
+                }
+            ],
+            "return": {
+                "description": "A shrinker of arrays of elements.",
+                "type": "[A] &rarr; Stream[[A]]"
+            },
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1032,
+            "itemtype": "property",
+            "name": "genUndefined",
+            "static": 1,
+            "type": "Gen[undefined]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1039,
+            "itemtype": "property",
+            "name": "genNull",
+            "static": 1,
+            "type": "Gen[null]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1046,
+            "itemtype": "property",
+            "name": "genNaN",
+            "static": 1,
+            "type": "Gen[Float]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1053,
+            "itemtype": "property",
+            "name": "genBool",
+            "static": 1,
+            "type": "Gen[Bool]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1060,
+            "description": "Uniformly generates a 32-bit integer.\n\nSee {{#crossLink \"Gen/genIntSpecial\"}}{{/crossLink}} for specific corner cases and \n{{#crossLink \"Gen/genIntMixed\"}}{{/crossLink}} for a mixture emphasizing corner cases.",
+            "itemtype": "property",
+            "name": "genInt",
+            "static": 1,
+            "type": "Gen[Int]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1072,
+            "description": "Generate a selection of corner cases.  Currently, 0, 1, -1, 2^31-1, -2^31.",
+            "itemtype": "property",
+            "name": "genIntSpecial",
+            "static": 1,
+            "type": "Gen[Int]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1081,
+            "description": "Generate a mixture that slightly emphasizes corner cases.",
+            "itemtype": "property",
+            "name": "genIntMix",
+            "static": 1,
+            "type": "Gen[Int]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1090,
+            "description": "Uniformly generates a 32-bit unsigned integer.\n\nSee {{#crossLink \"Gen/genUintSpecial\"}}{{/crossLink}} for specific corner cases and \n{{#crossLink \"Gen/genUintMixed\"}}{{/crossLink}} for a mixture emphasizing corner cases.",
+            "itemtype": "property",
+            "name": "genUint",
+            "static": 1,
+            "type": "Gen[Uint]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1102,
+            "description": "Generate a selection of corner cases.  Currently, 0, 1, -1, 2^32-1.",
+            "itemtype": "property",
+            "name": "genUintSpecial",
+            "static": 1,
+            "type": "Gen[Uint]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1111,
+            "description": "Generate a mixture that slightly emphasizes corner cases.",
+            "itemtype": "property",
+            "name": "genUintMix",
+            "static": 1,
+            "type": "Gen[Uint]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1120,
+            "description": "Size scaled floats.  Typically {{#crossLink \"Gen/chooseFloat\"}}{{/crossLink}} will be preferable.\nOnly produces \"well-behaved\" floats.  See {{#crossLink \"Gen/genFloatSpecial\"}}{{/crossLink}}\nor {{#crossLink \"Gen/genFloatMix\"}}{{/crossLink}} for more hostile tests.\n\nUse {{#crossLink \"Gen/suchThat\"}}{{/crossLink}} to exclude 0 and such.",
+            "itemtype": "property",
+            "name": "genFloat",
+            "static": 1,
+            "type": "Gen[Float]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1133,
+            "description": "Selected floating point corner cases.  Currently, 0, -0, 1, -1, Infinity, -Infinity, NaN.",
+            "itemtype": "property",
+            "name": "genFloatSpecial",
+            "static": 1,
+            "type": "Gen[Float]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1142,
+            "description": "Currently, a 1% mixture of genFloatSpecial into genFloat.",
+            "itemtype": "property",
+            "name": "genFloatMix",
+            "static": 1,
+            "type": "Gen[Float]",
+            "class": "Gen[A]",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1172,
+            "itemtype": "method",
+            "name": "and",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "that",
+                    "description": "",
+                    "type": "Result"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Result"
+            },
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1192,
+            "itemtype": "method",
+            "name": "or",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "that",
+                    "description": "",
+                    "type": "Result"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Result"
+            },
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1212,
+            "itemtype": "method",
+            "name": "implies",
+            "chainable": 1,
+            "params": [
+                {
+                    "name": "that",
+                    "description": "",
+                    "type": "Result"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Result"
+            },
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1228,
+            "description": "Sometimes we need to weaken proof.",
+            "itemtype": "method",
+            "name": "provedToPassed",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "return": {
+                "description": "this unless this is Result.Proved, then Result.Passed.",
+                "type": "Result"
+            },
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1241,
+            "description": "A test succeeded.",
+            "itemtype": "property",
+            "name": "Passed",
+            "static": 1,
+            "type": "{Result}",
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1250,
+            "description": "A test has been proven correct and no further trials are needed.",
+            "itemtype": "property",
+            "name": "Proved",
+            "static": 1,
+            "type": "{Result}",
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1259,
+            "description": "A test failed.",
+            "itemtype": "property",
+            "name": "Failed",
+            "static": 1,
+            "type": "{Result}",
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1268,
+            "description": "A test's preconditions were unable to be satisfied.",
+            "itemtype": "property",
+            "name": "Undecided",
+            "static": 1,
+            "type": "{Result}",
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1277,
+            "description": "A test threw an exception.",
+            "itemtype": "method",
+            "name": "Exception",
+            "static": 1,
+            "params": [
+                {
+                    "name": "exception",
+                    "description": "",
+                    "type": "Exception"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Result"
+            },
+            "class": "Result",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1304,
+            "description": "Test a property once.",
+            "itemtype": "method",
+            "name": "test",
+            "params": [
+                {
+                    "name": "prop",
+                    "description": "Property to test.",
+                    "type": "Gen[Result]"
+                }
+            ],
+            "return": {
+                "description": "For now.",
+                "type": "Result"
+            },
+            "class": "TestRunner",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1315,
+            "description": "Test a property once asynchronously.",
+            "itemtype": "method",
+            "name": "testAsync",
+            "params": [
+                {
+                    "name": "prop",
+                    "description": "Property to test.",
+                    "type": "(Result &rarr; void) &rarr; Gen[void]"
+                },
+                {
+                    "name": "k",
+                    "description": "Callback.",
+                    "type": "Result &rarr; void"
+                }
+            ],
+            "class": "TestRunner",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1326,
+            "itemtype": "method",
+            "name": "check",
+            "params": [
+                {
+                    "name": "prop",
+                    "description": "Property to test.",
+                    "type": "Gen[Result]"
+                }
+            ],
+            "return": {
+                "description": "For now.",
+                "type": "Object"
+            },
+            "class": "TestRunner",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1360,
+            "itemtype": "method",
+            "name": "checkAsync",
+            "params": [
+                {
+                    "name": "prop",
+                    "description": "Property to test.",
+                    "type": "(Result &rarr; void) &rarr; Gen[void]"
+                },
+                {
+                    "name": "k",
+                    "description": "",
+                    "type": "Object &rarr; void"
+                }
+            ],
+            "class": "TestRunner",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1400,
+            "itemtype": "method",
+            "name": "testRun",
+            "params": [
+                {
+                    "name": "prop",
+                    "description": "Property to test.",
+                    "type": "Gen[Result]"
+                },
+                {
+                    "name": "asserter",
+                    "description": "Assert function.",
+                    "type": "(Bool, String) &rarr; void"
+                }
+            ],
+            "class": "TestRunner",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1418,
+            "itemtype": "method",
+            "name": "testRunAsync",
+            "params": [
+                {
+                    "name": "prop",
+                    "description": "Property to test.",
+                    "type": "(Result &rarr; void) &rarr; Gen[void]"
+                },
+                {
+                    "name": "asserter",
+                    "description": "Assert function.",
+                    "type": "(Bool, String) &rarr; void"
+                }
+            ],
+            "class": "TestRunner",
+            "module": "jsqc"
+        },
+        {
+            "file": "jsqc.js",
+            "line": 1438,
+            "description": "A TestRunner instance with the default configuration.",
+            "itemtype": "property",
+            "name": "Default",
+            "static": 1,
+            "type": "TestRunner",
+            "class": "TestRunner",
+            "module": "jsqc"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:497"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:497"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:534"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:534"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:546"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:546"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:555"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:555"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:565"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:565"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:575"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:575"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:583"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:583"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:591"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:591"
+        },
+        {
+            "message": "unknown tag: name",
+            "line": " tests/qunit-1.11.0.js:599"
+        },
+        {
+            "message": "replacing incorrect tag: function with method",
+            "line": " tests/qunit-1.11.0.js:599"
+        },
+        {
+            "message": "unknown tag: deprecate",
+            "line": " tests/qunit-1.11.0.js:650"
+        },
+        {
+            "message": "unknown tag: projectdescription",
+            "line": " tests/qunit-1.11.0.js:1752"
+        },
+        {
+            "message": "unknown tag: version",
+            "line": " tests/qunit-1.11.0.js:1752"
+        },
+        {
+            "message": "unknown tag: link",
+            "line": " tests/qunit-1.11.0.js:1752"
+        },
+        {
+            "message": "replacing incorrect tag: params with param",
+            "line": " jsqc.js:750"
+        },
+        {
+            "message": "unknown tag: result",
+            "line": " jsqc.js:771"
+        },
+        {
+            "message": "unknown tag: result",
+            "line": " jsqc.js:787"
+        },
+        {
+            "message": "Missing item type\nQUnit v1.11.0 - A JavaScript Unit Testing Framework\n\nhttp://qunitjs.com\n\nCopyright 2012 jQuery Foundation and other contributors\nReleased under the MIT license.\nhttp://jquery.org/license",
+            "line": " tests/qunit-1.11.0.js:1"
+        },
+        {
+            "message": "Missing item type\nProvides a normalized error string, correcting an issue\nwith IE 7 (and prior) where Error.prototype.toString is\nnot properly implemented\n\nBased on http://es5.github.com/#x15.11.4.4",
+            "line": " tests/qunit-1.11.0.js:36"
+        },
+        {
+            "message": "Missing item type\nMakes a clone of an object using only Array or Object as base,\nand copies over the own enumerable properties.",
+            "line": " tests/qunit-1.11.0.js:65"
+        },
+        {
+            "message": "Missing item type",
+            "line": " tests/qunit-1.11.0.js:650"
+        },
+        {
+            "message": "Missing item type",
+            "line": " tests/qunit-1.11.0.js:656"
+        },
+        {
+            "message": "Missing item type",
+            "line": " tests/qunit-1.11.0.js:663"
+        },
+        {
+            "message": "Missing item type\nConfig object: Maintain internal state\nLater exposed as QUnit.config\n`config` initialized at top of scope",
+            "line": " tests/qunit-1.11.0.js:683"
+        },
+        {
+            "message": "Missing item type",
+            "line": " tests/qunit-1.11.0.js:1004"
+        },
+        {
+            "message": "Missing item type",
+            "line": " tests/qunit-1.11.0.js:1290"
+        },
+        {
+            "message": "Missing item type\nEscape text for attribute or text content.",
+            "line": " tests/qunit-1.11.0.js:1378"
+        },
+        {
+            "message": "Missing item type",
+            "line": " tests/qunit-1.11.0.js:1495"
+        },
+        {
+            "message": "Missing item type",
+            "line": " tests/qunit-1.11.0.js:1510"
+        },
+        {
+            "message": "Missing item type\njsDump Copyright (c) 2008 Ariel Flesler - aflesler(at)gmail(dot)com |\nhttp://flesler.blogspot.com Licensed under BSD\n(http://www.opensource.org/licenses/bsd-license.php) Date: 5/15/2008",
+            "line": " tests/qunit-1.11.0.js:1752"
+        }
+    ]
+}
