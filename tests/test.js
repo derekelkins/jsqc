@@ -28,7 +28,7 @@ function qc(gens, body) {
 module('RandGen');
 
 test('random calls differ', function() {
-    var rng = new QC.RandGen(new Uint32Array(10));
+    var rng = new QC.RandGen(new (Uint32Array || Array)(10));
     notEqual(rng.randomUint(), rng.randomUint());
 });
 
@@ -72,6 +72,19 @@ test('unit tests are a special case of QC tests: shrinkArray part deux', functio
     qc([], function() {
         return equiv(Gen.shrinkArray(Gen.shrinkBool)([true, true]).toArray()
                     ,[[false, true],[false,false],[true,false]]);
+    });
+});
+
+test('chooseInt(lo,hi) between lo and hi', function() {
+    qc([Gen.genInt, Gen.genInt], function(a, b) {
+        var x = 0;
+        if(a < b) {
+            x = Gen.chooseInt(a, b)(QC.StdRandGen, 100);
+            return a <= x && x <= b;
+        } else {
+            x = Gen.chooseInt(b, a)(QC.StdRandGen, 100);
+            return b <= x && x <= a;
+        }
     });
 });
 

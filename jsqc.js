@@ -5,7 +5,9 @@ Copyright (c) 2013, Derek Elkins.  See LICENSE.
 
 TODO: Implement something like ScalaCheck's Command framework.
 TODO: Implement shrinking.
+TODO: Implement function generators.
 TODO: Implement exhaustive checking for small domains.
+TODO: Make elements, nonEmptyArrayOf, etc. select uniformly. Doing rand()%n is not uniform unless n is a power of two.
 
 @module jsqc
 @main jsqc
@@ -19,6 +21,8 @@ TODO: Implement exhaustive checking for small domains.
         factory(window.jsqc = {});
     }
 })(function(exports) {
+
+var window = window || Function('return this')(); // Get global object if not in browser.
 
 function extend(o, proto) {
     for(var k in proto) {
@@ -57,6 +61,16 @@ if(window.Uint32Array) {
 } else {
     exports.StdRandGen = new RandGen([new Date().getTime()>>>0,new Date().getYear()>>>0,0,0,0,0,0,0,0,0]);
 }
+
+RandGen.prototype.getSeed = function() {
+    var s = new Uint32Array(10);
+    s[0] = this.input[ 4]; s[1] = this.input[ 5];
+    s[2] = this.input[ 6]; s[3] = this.input[ 7];
+    s[4] = this.input[ 8]; s[5] = this.input[ 9];
+    s[6] = this.input[10]; s[7] = this.input[11];
+    s[8] = this.input[14]; s[9] = this.input[15];
+    return s;
+};
 
 // TODO: Inline.
 // Does the wrong thing when n = 0 or n >= 32 which doesn't matter here.
@@ -241,7 +255,7 @@ First element in a non-empty stream.
 @return A
 */
 Stream.prototype.head = function() {
-    if(this._isEmpty) throw "Stream.head of empty stream.";
+    if(this._isEmpty) throw 'Stream.head of empty stream.';
     if(this._head === undefined) {
         this._step();
     }
@@ -256,7 +270,7 @@ Remainder of a non-empty stream.
 @return {Stream[A]}
 */
 Stream.prototype.tail = function() {
-    if(this._isEmpty) throw "Stream.tail of empty stream.";
+    if(this._isEmpty) throw 'Stream.tail of empty stream.';
     if(this._tail === undefined) {
         this._step();
     }
@@ -366,13 +380,13 @@ Stream.singleton = function(x) {
 };
 
 /**
-Produces a Gen[A] which is a function from (RNG, Int) &rarr; Maybe[A]
+Produces a Gen[A] which is a function from (RNG, Int, Bool) &rarr; Maybe[A]
 where Maybe[A] = [] | [A].
 
 Don't call with new.
 
 @class Gen[A] 
-@param generator {(RNG, Int) &rarr; Maybe[A]} The actual value generator.
+@param generator {(RNG, Int, Bool) &rarr; Maybe[A]} The actual value generator.
 @param [label=''] {String} A label.
 @param [predicate] {[A] &rarr; Bool} A filtering predicate.
 @param [shrinker] {A &rarr; Stream[A]} A value shrinker.
@@ -382,12 +396,12 @@ function Gen(generator, label, predicate, shrinker) {
     var result;
     var gen = generator.underlyingGenerator || generator;
     if(predicate == null) {
-        result = function(rng, size) { return gen(rng, size); };
+        result = function(rng, size, catchExceptions) { return gen(rng, size, catchExceptions); };
         result.predicate = generator.predicate;
     } else {
         var p = generator.predicate ? function(a) { return predicate(a) && generator.predicate(a); } : predicate;
-        result = function(rng, size) { 
-            var ma = gen(rng, size);
+        result = function(rng, size, catchExceptions) { 
+            var ma = gen(rng, size, catchExceptions);
             return ma.length === 0 || p(ma[0]) ? ma : [];
         };
         result.predicate = p;
@@ -432,13 +446,13 @@ Gen.prototype.toString = function() {
 /**
 Return a new generator with a specified size parameter.
 
-@method resize
+@method resized
 @chainable
 @param size {Int} A new size for the generator.
 */
 Gen.prototype.resized = function(size) {
     var gen = this.underlyingGenerator;
-    return Gen(function(rng, oldSize) { return gen(rng, Math.min(oldSize, size)); }, null, this.predicate, this.shrinker);
+    return Gen(function(rng, oldSize, catchExceptions) { return gen(rng, Math.min(oldSize, size), catchExceptions); }, null, this.predicate, this.shrinker);
 };
 
 /**
@@ -453,7 +467,7 @@ generators or the same generator in different states will produce independent ge
 */
 Gen.prototype.variant = function(tweak) {
     var gen = this.underlyingGenerator;
-    return Gen(function(rng, size) { return gen(rng.split(tweak), size); }, null, this.predicate, this.shrinker);
+    return Gen(function(rng, size, catchExceptions) { return gen(rng.split(tweak), size, catchExceptions); }, null, this.predicate, this.shrinker);
 };
 
 /**
@@ -466,8 +480,8 @@ Turn a Gen[A] into a Gen[B] given a function A &rarr; B.
 */
 Gen.prototype.map = function(f) {
     var self = this;
-    var gen = Gen(function(rng, size) { 
-        var a = self(rng, size);
+    var gen = Gen(function(rng, size, catchExceptions) { 
+        var a = self(rng, size, catchExceptions);
         return a.length === 0 ? [] : [f(a[0])]; 
     }, this.label);
     if(this.independent) gen.independent = this.independent;
@@ -484,9 +498,9 @@ Turn a Gen[A] into a Gen[B] given a function A &rarr; Gen[B].
 */
 Gen.prototype.concatMap = function(f) {
     var self = this;
-    return Gen(function(rng, size) { 
-        var a = self(rng, size);
-        return a.length === 0 ? [] : f(a[0])(rng, size); 
+    return Gen(function(rng, size, catchExceptions) { 
+        var a = self(rng, size, catchExceptions);
+        return a.length === 0 ? [] : f(a[0])(rng, size, catchExceptions); 
     });
 };
 
@@ -511,11 +525,11 @@ Return a generator that returns an array of a random length greater than 0.
 */
 Gen.prototype.nonEmptyArrayOf = function() {
     var self = this;
-    return Gen(function(rng, size) {
+    return Gen(function(rng, size, catchExceptions) {
         var n = 1 + (rng.randomUint() % size);
         var xs = new Array(n);
         for(var i = 0; i < n; i++) {
-            var a = self(rng, size);
+            var a = self(rng, size, catchExceptions);
             if(a.length === 0) return [];
             xs[i] = a[0];
         }
@@ -532,11 +546,11 @@ Return a generator that returns an array of a random length.
 */
 Gen.prototype.arrayOf = function() {
     var self = this;
-    return Gen(function(rng, size) {
+    return Gen(function(rng, size, catchExceptions) {
         var n = rng.randomUint() % (size+1);
         var xs = new Array(n);
         for(var i = 0; i < n; i++) {
-            var a = self(rng, size);
+            var a = self(rng, size, catchExceptions);
             if(a.length === 0) return [];
             xs[i] = a[0];
         }
@@ -554,10 +568,10 @@ Return a generator that returns an array of a given length.
 */
 Gen.prototype.arrayOfSize = function(n) {
     var self = this;
-    return Gen(function(rng, size) {
+    return Gen(function(rng, size, catchExceptions) {
         var xs = new Array(n);
         for(var i = 0; i < n; i++) {
-            var a = self(rng, size);
+            var a = self(rng, size, catchExceptions);
             if(a.length === 0) return [];
             xs[i] = a[0];
         }
@@ -579,11 +593,11 @@ Combine two generators into one, prefering one depending on weight.  By default,
 */
 Gen.prototype.mixWith = function(gen, weight) {
     var self = this;
-    return Gen(function(rng, size) {
+    return Gen(function(rng, size, catchExceptions) {
         if(rng.random() < weight) {
-            return self(rng, size);
+            return self(rng, size, catchExceptions);
         } else {
-            return gen(rng, size);
+            return gen(rng, size, catchExceptions);
         }
     });
 };
@@ -597,13 +611,20 @@ Convert a proposition, a Gen[Bool], into a property.
 */
 Gen.prototype.asProperty = function() {
     var self = this;
-    return Gen(function(rng, size) {
-        try {
-            var result = self(rng, size);
+    return Gen(function(rng, size, catchExceptions) {
+        var result;
+        if(catchExceptions) {
+            try {
+                result = self(rng, size, true);
+                if(result.length === 0) return [Result.Undecided];
+                if(result[0]) return [self.independent ? Result.Proved : Result.Passed]; else return [Result.Failed];
+            } catch(e) {
+                return [Result.Exception(e)];
+            }
+        } else {
+            var result = self(rng, size, false);
             if(result.length === 0) return [Result.Undecided];
             if(result[0]) return [self.independent ? Result.Proved : Result.Passed]; else return [Result.Failed];
-        } catch(e) {
-            return [Result.Exception(e)];
         }
     });
 };
@@ -677,7 +698,7 @@ Gen.prototype.throwsException = function() {
     var self = this;
     return Gen(function(rng, size) {
         try {
-            self(rng, size);
+            self(rng, size, false);
             return [false];
         } catch(e) {
             return [true];
@@ -736,10 +757,10 @@ Return a generator of arrays from an array of generators.
 @return {Gen[[A]]} A generator of arrays.
 */
 Gen.sequence = function(gens) {
-    return Gen(function(rng, size) {
+    return Gen(function(rng, size, catchExceptions) {
         var xs = new Array(gens.length);
         for(var i = 0; i < gens.length; i++) {
-            var a = gens[i](rng, size);
+            var a = gens[i](rng, size, catchExceptions);
             if(a.length === 0) return [];
             xs[i] = a[0];
         }
@@ -824,14 +845,14 @@ Return a generator that chooses a value from the specified list of generators wi
 Gen.frequency = function(gens) {
     var total = 0;
     for(var i = 0; i < gens.length; i++) total += gens[i][0];
-    if(total === 0) throw "Gen.frequency: no chance of anything happening";
+    if(total === 0) throw 'Gen.frequency: no chance of anything happening';
     return Gen(function(rng, size) {
         var k = rng.randomUint() % total;
         for(var j = 0; j < gens.length; j++) {
             if(k < gens[j][0]) return gens[j][1](rng, size);
             k -= gens[j][0];
         }
-        throw "Gen.frequency: Should never get here.";
+        throw 'Gen.frequency: Should never get here.';
     });
 };
 
@@ -862,7 +883,7 @@ Return a generator that chooses a value from one of the specified list of genera
 @return {Gen[A]} A generator that returns a random element of a randomly chosen input generator.
 */
 Gen.oneOf = function(gens) {
-    return Gen(function(rng, _) { return gens[rng.randomUint()%gens.length](rng, size); });
+    return Gen(function(rng, _, catchExceptions) { return gens[rng.randomUint()%gens.length](rng, size, catchExceptions); });
 };
 
 /**
@@ -890,7 +911,7 @@ Construct a generator that depends on the size parameter.
 @return {Gen[A]}
 */
 Gen.sized = function(g) {
-    return Gen(function(rng, size) { return g(size)(rng, size); }, null, null, g.shrinker);
+    return Gen(function(rng, size, catchExceptions) { return g(size)(rng, size, catchExceptions); }, null, null, g.shrinker);
 };
 
 /**
@@ -904,9 +925,9 @@ Generate a random Int in the specified range inclusive.
 @return {Gen[Int]}
 */
 Gen.chooseInt = function(lo, hi) {
-    if(lo >= hi) throw "Gen.chooseInt: Invalid range.";
+    if(lo >= hi) throw 'Gen.chooseInt: Invalid range.';
     var m = hi - lo + 1;
-    return Gen(function(rng, _) { return [rng.randomInt()%m]; }, null, null, Gen.shrinkInt); 
+    return Gen(function(rng, _) { return [lo + rng.randomUint()%m]; }, null, null, Gen.shrinkInt); 
 };
 
 /**
@@ -920,7 +941,7 @@ Generate a random Float in the specified range not including the end point.
 @return {Gen[Float]}
 */
 Gen.chooseFloat = function(lo, hi) {
-    if(lo >= hi) throw "Gen.chooseFloat: Invalid range.";
+    if(lo >= hi) throw 'Gen.chooseFloat: Invalid range.';
     var w = hi - lo;
     return Gen(function(rng, _) { return [rng.random()*w]; }, null, null, Gen.shrinkFloat);
 };
@@ -1276,7 +1297,8 @@ function TestRunner(options) {
     this.maxShrinks = options.maxShrinks || 100;
     this.initialSize = options.initialSize || 100;
     this.stringify = options.stringify || JSON.stringify;
-};
+    this.catchExceptions = options.catchExceptions || true;
+}
 exports.TestRunner = TestRunner;
 
 /**
@@ -1287,7 +1309,7 @@ Test a property once.
 @return {Result} For now.
 */
 TestRunner.prototype.test = function(prop) {
-    return prop(this.rng, this.initialSize)[0];
+    return prop(this.rng, this.initialSize, this.catchExceptions)[0];
 };
 
 /**
@@ -1298,7 +1320,7 @@ Test a property once asynchronously.
 @param k {Result &rarr; void} Callback.
 */
 TestRunner.prototype.testAsync = function(prop, k) {
-    prop(k)(this.rng, this.initialSize);
+    prop(k)(this.rng, this.initialSize, this.catchExceptions);
 };
 
 /**
